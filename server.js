@@ -13,9 +13,15 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
 	socket.emit('whoami', { id: socket.id });
 	// join to the room
-	socket.on('joinmetothisroom', (roomid) => {
+	socket.on('joinmetothisroom', ({ roomid, name }) => {
 		socket.join(roomid);
 		socket.emit('joinmetothisroomsuccess', `${roomid} `);
+		io.to(roomid).emit('someonejoined', name);
+	});
+
+	// tell everyone who are here in the room
+	socket.on('tell_everyone_who_joined', ({ allusers, roomid }) => {
+		io.to(roomid).emit('who_joined', allusers);
 	});
 
 	// check connection

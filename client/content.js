@@ -3,6 +3,7 @@ let adTimer;
 let myid;
 let roomid;
 let iamhost = false;
+let allusersinroom = [];
 
 const socket = io('http://localhost:5000/');
 
@@ -42,7 +43,7 @@ function syncVideoStates() {
 	socket.emit('videoStates', { videoState, roomid });
 }
 
-// listen to other video player states
+// listen to hosts video player states
 
 socket.on('videoStates', ({ isHostPaused, hosttime }) => {
 	// sync video player pause and play
@@ -54,8 +55,8 @@ socket.on('videoStates', ({ isHostPaused, hosttime }) => {
 
 	let diffOfSeek = videoplayer?.currentTime - hosttime;
 
-	// sync time if user is behind by more than 10 s (in case of poor connection)
-	// or if the user is forward 10s than everyone
+	// sync time if any user is behind by more than 10 s (in case of poor connection)
+	// or if any user is forward 10s than everyone
 	if (diffOfSeek < -10 || diffOfSeek > 10) {
 		videoplayer.currentTime = hosttime;
 	}
@@ -70,39 +71,68 @@ const status = document.createElement('div');
 status.id = 'status-container';
 
 const main_container = document.createElement('DIV');
+const start_container = document.createElement('DIV');
 const roomlabel = document.createElement('DIV');
 const input = document.createElement('INPUT');
+const nameinput = document.createElement('INPUT');
 const joinbutton = document.createElement('DIV');
+const closeBtn = document.createElement('div');
 
 hostbutton.id = 'host-btn';
 main_container.classList.add('main-container');
+start_container.classList.add('start-container');
+
 roomlabel.id = 'room-label';
 input.id = 'room-id-input';
-input.placeholder = 'Enter Room Code';
+nameinput.id = 'name-id';
+nameinput.placeholder = 'Enter display name';
+input.placeholder = 'Enter room Code';
 joinbutton.id = 'join-btn';
+closeBtn.id = 'close-btn';
 
 roomlabel.innerHTML = `OR`;
 joinbutton.innerHTML = `Join`;
+closeBtn.innerHTML = '❌';
 
-main_container.appendChild(hostbutton);
-main_container.appendChild(roomlabel);
-main_container.appendChild(input);
-main_container.appendChild(joinbutton);
-main_container.appendChild(status);
+start_container.appendChild(hostbutton);
+start_container.appendChild(roomlabel);
+start_container.appendChild(input);
+start_container.appendChild(joinbutton);
+start_container.appendChild(status);
+
+start_container.appendChild(nameinput);
+
+main_container.appendChild(start_container);
+main_container.appendChild(closeBtn);
 
 document.querySelector('body').appendChild(main_container);
 
 hostbutton.addEventListener('click', () => {
-	socket.emit('joinmetothisroom', myid);
-	roomid = myid;
-	iamhost = true;
+	if (nameinput.value !== '') {
+		localStorage.setItem('lets_party_uname', nameinput.value);
+		socket.emit('joinmetothisroom', { roomid: myid, name: nameinput.value });
+		roomid = myid;
+		iamhost = true;
+	} else {
+		alert('Enter your display name');
+	}
 });
 
 joinbutton.addEventListener('click', () => {
-	if (input !== null) {
-		socket.emit('joinmetothisroom', input.value);
+	if (input.value !== '' && nameinput.value !== '') {
+		localStorage.setItem('lets_party_uname', nameinput.value);
+		socket.emit('joinmetothisroom', {
+			roomid: input.value,
+			name: nameinput.value,
+		});
 		roomid = input.value;
+	} else {
+		alert('Enter your Code and Display Name');
 	}
+});
+
+closeBtn.addEventListener('click', () => {
+	main_container.style.right = '-100%';
 });
 
 socket.on('joinmetothisroomsuccess', (msg) => {
@@ -112,11 +142,10 @@ socket.on('joinmetothisroomsuccess', (msg) => {
 	input.style.display = 'none';
 	joinbutton.style.display = 'none';
 	hostbutton.style.display = 'none';
-	if (iamhost) {
-		status.innerHTML = `You are in room ${thecode} Tell everyone to join here!`;
-	} else {
-		status.innerHTML = `You are in room ${thecode}`;
-	}
+	nameinput.style.display = 'none';
+
+	status.innerHTML = `Room: ${thecode} <br> Tell everyone to join here! <br>`;
+
 	//main_container.style.display = 'none';
 
 	setTimeout(() => {
@@ -126,6 +155,27 @@ socket.on('joinmetothisroomsuccess', (msg) => {
 	checkIsAdPlayng();
 });
 
+socket.on('someonejoined', (name) => {
+	if (iamhost) {
+		status.innerHTML += ` ${name} joined! <br>`;
+		allusersinroom.push(name);
+		socket.emit('tell_everyone_who_joined', {
+			allusers: allusersinroom,
+			roomid,
+		});
+	}
+});
+
+socket.on('who_joined', (allusers) => {
+	if (!iamhost) {
+		allusers?.forEach((user) => {
+			status.innerHTML += ` ${user} joined! <br>`;
+		});
+	}
+});
+
 socket.on('msg', (msg) => {
 	console.log(msg);
 });
+
+document.querySelector('body').appendChild(main_container);
