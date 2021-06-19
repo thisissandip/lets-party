@@ -11,52 +11,54 @@ socket.on('whoami', function ({ id }) {
 	myid = id;
 });
 
-// check if ad is playing (for non sub users)
-function init() {
+function checkIsAdPlayng() {
 	adTimer = setInterval(() => {
 		let isAd = document.querySelector('.ad-cta-wrapper');
 		if (isAd === null) {
 			getVideoPlayer();
 		}
-	}, 10000);
+	}, 1000);
 }
-
-init();
 
 function getVideoPlayer() {
 	clearInterval(adTimer);
+
 	videoplayer = document.querySelector('video');
-	//keep listening to the hosts videoplayer events
-	setInterval(() => {
-		syncVideoStates();
-	}, 1000);
+	videoplayer.removeAttribute('autoplay');
+
+	//keep listening to the hosts videoplayer events, only host can control the play pause and seek
+	if (iamhost) {
+		setInterval(() => {
+			syncVideoStates();
+		}, 1000);
+	}
 }
 
 function syncVideoStates() {
 	let videoState = {
-		currentTime: videoplayer?.currentTime,
-		isPaused: videoplayer?.paused,
+		hosttime: videoplayer?.currentTime,
+		isHostPaused: videoplayer?.paused,
 	};
 	socket.emit('videoStates', { videoState, roomid });
 }
 
 // listen to other video player states
 
-socket.on('videoStates', ({ isPaused, syncCurrentTime }) => {
-	let ismyvideopaused = videoplayer?.paused;
-	let mycurrentTime = videoplayer?.currentTime;
-
+socket.on('videoStates', ({ isHostPaused, hosttime }) => {
 	// sync video player pause and play
-	if (isPaused) {
+	if (isHostPaused) {
 		videoplayer?.pause();
 	} else {
 		videoplayer?.play();
 	}
 
-	// sync video currentTime
-	/* 		if (mycurrentTime !== currentTime) {
-		videoplayer?.currentTime = currentTime;
-	} */
+	let diffOfSeek = videoplayer?.currentTime - hosttime;
+
+	// sync time if user is behind by more than 10 s (in case of poor connection)
+	// or if the user is forward 10s than everyone
+	if (diffOfSeek < -10 || diffOfSeek > 10) {
+		videoplayer.currentTime = hosttime;
+	}
 });
 
 /* HTML OUTPUT ON BROWSER */
@@ -105,6 +107,8 @@ socket.on('joinmetothisroomsuccess', (msg) => {
 	setTimeout(() => {
 		socket.emit('msg', { data: 'hey', roomid });
 	}, 10000);
+
+	checkIsAdPlayng();
 });
 
 socket.on('msg', (msg) => {
