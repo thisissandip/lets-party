@@ -7,7 +7,7 @@ let iamhost = false;
 const socket = io('http://localhost:5000/');
 
 socket.on('whoami', function ({ id }) {
-	console.log('myid', id);
+	// console.log('myid', id);
 	myid = id;
 });
 
@@ -64,25 +64,31 @@ socket.on('videoStates', ({ isHostPaused, hosttime }) => {
 /* HTML OUTPUT ON BROWSER */
 
 const hostbutton = document.createElement('div');
-hostbutton.innerHTML = 'Start Hosting';
+hostbutton.innerHTML = 'Start New Room';
+
+const status = document.createElement('div');
+status.id = 'status-container';
 
 const main_container = document.createElement('DIV');
 const roomlabel = document.createElement('DIV');
 const input = document.createElement('INPUT');
-const button = document.createElement('DIV');
+const joinbutton = document.createElement('DIV');
 
-main_container.classList.add('ce_main');
+hostbutton.id = 'host-btn';
+main_container.classList.add('main-container');
 roomlabel.id = 'room-label';
-input.id = 'ce_input';
-button.id = 'ce_button';
+input.id = 'room-id-input';
+input.placeholder = 'Enter Room Code';
+joinbutton.id = 'join-btn';
 
-roomlabel.innerHTML = `Enter Room Id`;
-button.innerHTML = `Join`;
+roomlabel.innerHTML = `OR`;
+joinbutton.innerHTML = `Join`;
 
 main_container.appendChild(hostbutton);
 main_container.appendChild(roomlabel);
 main_container.appendChild(input);
-main_container.appendChild(button);
+main_container.appendChild(joinbutton);
+main_container.appendChild(status);
 
 document.querySelector('body').appendChild(main_container);
 
@@ -92,7 +98,7 @@ hostbutton.addEventListener('click', () => {
 	iamhost = true;
 });
 
-button.addEventListener('click', () => {
+joinbutton.addEventListener('click', () => {
 	if (input !== null) {
 		socket.emit('joinmetothisroom', input.value);
 		roomid = input.value;
@@ -100,9 +106,18 @@ button.addEventListener('click', () => {
 });
 
 socket.on('joinmetothisroomsuccess', (msg) => {
-	console.log(msg);
-	console.log('Tell everyone to join here');
-	main_container.style.display = 'none';
+	let thecode = `<code class="roomcode">${msg}</code>`;
+
+	roomlabel.style.display = 'none';
+	input.style.display = 'none';
+	joinbutton.style.display = 'none';
+	hostbutton.style.display = 'none';
+	if (iamhost) {
+		status.innerHTML = `You are in room ${thecode} Tell everyone to join here!`;
+	} else {
+		status.innerHTML = `You are in room ${thecode}`;
+	}
+	//main_container.style.display = 'none';
 
 	setTimeout(() => {
 		socket.emit('msg', { data: 'hey', roomid });

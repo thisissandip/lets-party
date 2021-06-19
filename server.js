@@ -15,7 +15,7 @@ io.on('connection', (socket) => {
 	// join to the room
 	socket.on('joinmetothisroom', (roomid) => {
 		socket.join(roomid);
-		socket.emit('joinmetothisroomsuccess', `You are on in room ${roomid} `);
+		socket.emit('joinmetothisroomsuccess', `${roomid} `);
 	});
 
 	// check connection

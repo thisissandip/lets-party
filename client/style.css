@@ -1,0 +1,54 @@
+.main-container {
+	position: fixed;
+	display: flex;
+	bottom: 0;
+	background-color: #1f80e0;
+	width: 100%;
+	padding: 10px 0;
+	color: black;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+	color: white;
+}
+
+#host-btn,
+#join-btn {
+	cursor: pointer;
+	background-color: rgb(19, 19, 19);
+	color: white;
+	padding: 10px;
+	font-size: 15px;
+	margin: 0 20px;
+	border-radius: 2px;
+}
+
+#join-btn {
+	padding: 10px 20px;
+	background-color: rgb(19, 19, 19);
+}
+
+#room-label {
+	font-size: 20px;
+	font-weight: 500;
+	color: black;
+	margin: 0 20px;
+	margin-left: 0px;
+}
+
+#room-id-input {
+	width: 200px;
+	padding: 10px;
+	font-size: 15px;
+	border-radius: 2px;
+	border: 0;
+}
+
+#status-container {
+	font-size: 15px;
+}
+
+.roomcode {
+	font-size: 20px;
+	color: #000;
+}
