@@ -55,9 +55,9 @@ socket.on('videoStates', ({ isHostPaused, hosttime }) => {
 
 	let diffOfSeek = videoplayer?.currentTime - hosttime;
 
-	// sync time if any user is behind by more than 10 s (in case of poor connection)
-	// or if any user is forward 10s than everyone
-	if (diffOfSeek < -10 || diffOfSeek > 10) {
+	// sync time if any user is behind by more than 8 s (in case of poor connection)
+	// or if any user is forward 8s than everyone
+	if (diffOfSeek < -8 || diffOfSeek > 8) {
 		videoplayer.currentTime = hosttime;
 	}
 });
