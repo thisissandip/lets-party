@@ -5,7 +5,7 @@ let roomid;
 let iamhost = false;
 let allusersinroom = [];
 
-const socket = io('http://localhost:5000/');
+const socket = io('https://lets-party-server.herokuapp.com/');
 
 socket.on('whoami', function ({ id }) {
 	// console.log('myid', id);
@@ -146,11 +146,9 @@ socket.on('joinmetothisroomsuccess', (msg) => {
 
 	status.innerHTML = `Room: ${thecode} <br> Tell everyone to join here! <br> <br> <br>`;
 
-	//main_container.style.display = 'none';
-
-	setTimeout(() => {
+	/* 	setTimeout(() => {
 		socket.emit('msg', { data: 'hey', roomid });
-	}, 10000);
+	}, 10000); */
 
 	checkIsAdPlayng();
 });
