@@ -2,7 +2,7 @@
 A chrome extension to watch Disney+ Hotsar with your friends and family built with NodeJS, Express, Socket.io and Heroku.
 
 Me and my friends couldn't find a working chrome extension to stream Marvel's Loki in Hotstar. 
-So I decided to make it myself and built this amazing project in just under 8 hours. Well it was fun!
+So I decided to make it myself and built this project in just under 8 hours. Well it was fun!
 
 I have plans to extend this for Netflix and Amazon Prime. If you would like to contribute, the doors are all open :smile: refer the contribution guide below.
 
