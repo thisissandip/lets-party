@@ -6,6 +6,15 @@ So I decided to make it myself and made this fun little project in just under 8 
 
 I have plans to extend this for Netflix and Amazon Prime. If you would like to contribute, the doors are all open :smile:
 
+### 👨‍💻 &nbsp; How to use
+1. Upload the client folder in Chrome extension (I will be uploading it chrome store soon 🤞)
+2. Go to Disney+ Hotstar
+3. Share the link of the video you want to watch with you friends
+4. If you are the host, Start a room ( Note: Only host will have control over the video player )
+5. Share the room code and ask your friends to join the room.
+6. Enjoy Binging!
+
+
 ### 🚀 &nbsp; Development setup
 
 1. Clone the repository
@@ -16,7 +25,7 @@ git clone https://github.com/thisissandip/what-should-i-watch-next.git
 
 2. Upload the Client Folder in Chorme Extension.
 
-3. Install server dependencies (You can skip this step 3 and 4, if you want to make changes just to the client and use the deployed server)
+3. Install server dependencies (You can skip this step 3 and 4, if you want to code just for the client side and use the deployed server)
 
 ```
 npm install
