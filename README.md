@@ -17,9 +17,10 @@ Watch the demo video in new tab for better quality.
 1. Upload the client folder in Chrome extension (I will be uploading it chrome store soon 🤞)
 2. Go to Disney+ Hotstar
 3. Share the link of the video you want to watch with you friends
-4. If you are the host, Start a room ( Note: Only host will have control over the video player )
-5. Share the room code and ask your friends to join the room.
-6. Enjoy Binging!
+4. Enter your display name
+5. If you are the host, Start a room ( Note: Only host will have control over the video player )
+6. Share the room code and ask your friends to join the room.
+7. Enjoy Binging!
 
 
 ### 🚀 &nbsp; Development setup
