@@ -46,19 +46,21 @@ function syncVideoStates() {
 // listen to hosts video player states
 
 socket.on('videoStates', ({ isHostPaused, hosttime }) => {
-	// sync video player pause and play
-	if (isHostPaused) {
-		videoplayer?.pause();
-	} else {
-		videoplayer?.play();
-	}
+	// sync video player pause and play of users with the host
+	if (!iamhost) {
+		if (isHostPaused) {
+			videoplayer?.pause();
+		} else {
+			videoplayer?.play();
+		}
 
-	let diffOfSeek = videoplayer?.currentTime - hosttime;
+		let diffOfSeek = videoplayer?.currentTime - hosttime;
 
-	// sync time if any user is behind by more than 8 s (in case of poor connection)
-	// or if any user is forward 8s than everyone
-	if (diffOfSeek < -8 || diffOfSeek > 8) {
-		videoplayer.currentTime = hosttime;
+		// sync time if any user is behind by more than 8 s (in case of poor connection)
+		// or if any user is forward 8s than everyone
+		if (diffOfSeek < -8 || diffOfSeek > 8) {
+			videoplayer.currentTime = hosttime;
+		}
 	}
 });
 
@@ -74,6 +76,7 @@ const main_container = document.createElement('DIV');
 const start_container = document.createElement('DIV');
 const roomlabel = document.createElement('DIV');
 const input = document.createElement('INPUT');
+const letspartytitle = document.createElement('DIV');
 const nameinput = document.createElement('INPUT');
 const joinbutton = document.createElement('DIV');
 const closeBtn = document.createElement('div');
@@ -81,6 +84,9 @@ const closeBtn = document.createElement('div');
 hostbutton.id = 'host-btn';
 main_container.classList.add('main-container');
 start_container.classList.add('start-container');
+
+letspartytitle.id = 'lets-party-title';
+letspartytitle.innerHTML = "Let's Party! 📺 ";
 
 roomlabel.id = 'room-label';
 input.id = 'room-id-input';
@@ -94,6 +100,7 @@ roomlabel.innerHTML = `OR`;
 joinbutton.innerHTML = `Join`;
 closeBtn.innerHTML = '❌';
 
+start_container.appendChild(letspartytitle);
 start_container.appendChild(hostbutton);
 start_container.appendChild(roomlabel);
 start_container.appendChild(input);
