@@ -4,8 +4,7 @@ A chrome extension to watch Disney+ Hotsar with your friends and family built wi
 Me and my friends couldn't find a working chrome extension to stream Marvel's Loki in Hotstar. 
 So I decided to make it myself and built this project in just under 8 hours. Well it was fun!
 
-I have plans to extend this for Netflix and Amazon Prime. If you would like to contribute, the doors are all open :smile: refer the contribution guide below.
-
+I have plans to extend this for Netflix and Amazon Prime. If you would like to contribute, the doors are all open :smile: refer the contribution guide.
 
 https://user-images.githubusercontent.com/69596988/122669096-54751600-d1d9-11eb-9542-f1b2e899c9e8.mp4
 
