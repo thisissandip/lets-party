@@ -144,7 +144,7 @@ socket.on('joinmetothisroomsuccess', (msg) => {
 	hostbutton.style.display = 'none';
 	nameinput.style.display = 'none';
 
-	status.innerHTML = `Room: ${thecode} <br> Tell everyone to join here! <br> <br> <br>`;
+	status.innerHTML = `Room Code: <br> ${thecode} <br> Tell everyone to join here! <br> <br> <br>`;
 
 	/* 	setTimeout(() => {
 		socket.emit('msg', { data: 'hey', roomid });
